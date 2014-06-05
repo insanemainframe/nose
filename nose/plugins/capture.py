@@ -18,6 +18,12 @@ from nose.util import ln
 from StringIO import StringIO
 
 
+class ForceUnicodeIO(StringIO):
+    def write(self, s):
+        u = force_unicode(s)
+        StringIO.write(self, u)
+
+
 log = logging.getLogger(__name__)
 
 class Capture(Plugin):
@@ -94,7 +100,7 @@ class Capture(Plugin):
 
     def start(self):
         self.stdout.append(sys.stdout)
-        self._buf = StringIO()
+        self._buf = ForceUnicodeIO()
         sys.stdout = self._buf
 
     def end(self):
